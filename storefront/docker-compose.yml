@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  saleor-storefront:
+    container_name: saleor-storefront
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: host  # Thêm dòng này để build container có thể kết nối với host network
+      args:
+        NEXT_PUBLIC_SALEOR_API_URL: ${NEXT_PUBLIC_SALEOR_API_URL}
+        NEXT_PUBLIC_STOREFRONT_URL: ${NEXT_PUBLIC_STOREFRONT_URL}
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - saleor_network
+
+networks:
+  saleor_network:
+    external: true
+    name: devcontainer_default # Kiểm tra tên network chính xác bằng docker network ls
