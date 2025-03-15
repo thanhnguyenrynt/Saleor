@@ -1,5 +1,5 @@
-app = "saleor-api"  # tên app bạn đã chọn
-primary_region = "sin"  # khu vực bạn đã chọn
+app = "saleor-api"
+primary_region = "sin"
 
 [build]
   dockerfile = "Dockerfile"
@@ -7,20 +7,26 @@ primary_region = "sin"  # khu vực bạn đã chọn
 [env]
   PORT = "8000"
   PYTHONUNBUFFERED = "1"
-  DASHBOARD_URL = "https://saleor-app.fly.dev/"
+  DASHBOARD_URL = "https://saleor-api.fly.dev/"  # Sửa URL để khớp với app name
   DEFAULT_FROM_EMAIL = "noreply@example.com"
-  ALLOWED_HOSTS = "saleor-app.fly.dev,localhost,127.0.0.1"
-  ALLOWED_CORS_ORIGINS = "https://saleor-app.fly.dev"
-# Thêm lệnh khởi động rõ ràng
-[processes]
-  app = "gunicorn saleor.wsgi:application --bind 0.0.0.0:8000 --workers=1"
+  ALLOWED_HOSTS = "saleor-api.fly.dev,localhost,127.0.0.1,*"  # Thêm * và sửa domain
+  ALLOWED_CORS_ORIGINS = "https://saleor-api.fly.dev"  # Sửa URL để khớp với app name
+
 [http_service]
-  internal_port = 8080
+  internal_port = 8000  # Sửa từ 8080 thành 8000 để khớp với PORT
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
   processes = ["app"]
+
+# Thêm health check rõ ràng
+[checks]
+  [checks.alive]
+    type = "tcp"
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "30s"
 
 [[statics]]
   guest_path = "/app/static"
