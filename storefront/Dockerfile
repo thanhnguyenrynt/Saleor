@@ -26,9 +26,9 @@ COPY . .
 
 ENV NEXT_OUTPUT=standalone
 ARG NEXT_PUBLIC_SALEOR_API_URL
-ENV NEXT_PUBLIC_SALEOR_API_URL=${NEXT_PUBLIC_SALEOR_API_URL}
+ENV NEXT_PUBLIC_SALEOR_API_URL=https://saleor-api.fly.dev/graphql/
 ARG NEXT_PUBLIC_STOREFRONT_URL
-ENV NEXT_PUBLIC_STOREFRONT_URL=${NEXT_PUBLIC_STOREFRONT_URL}
+ENV NEXT_PUBLIC_STOREFRONT_URL=https://saleor-storefront.fly.dev
 
 # Get PNPM version from package.json
 RUN export PNPM_VERSION=$(cat package.json | jq '.engines.pnpm' | sed -E 's/[^0-9.]//g')
