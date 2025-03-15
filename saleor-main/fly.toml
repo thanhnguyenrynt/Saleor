@@ -5,13 +5,15 @@ primary_region = "sin"  # khu vực bạn đã chọn
   dockerfile = "Dockerfile"
 
 [env]
-  PORT = "8080"
+  PORT = "8000"
   PYTHONUNBUFFERED = "1"
   DASHBOARD_URL = "https://saleor-app.fly.dev/"
   DEFAULT_FROM_EMAIL = "noreply@example.com"
   ALLOWED_HOSTS = "saleor-app.fly.dev,localhost,127.0.0.1"
   ALLOWED_CORS_ORIGINS = "https://saleor-app.fly.dev"
-
+# Thêm lệnh khởi động rõ ràng
+[processes]
+  app = "gunicorn saleor.wsgi:application --bind 0.0.0.0:8000 --workers=1"
 [http_service]
   internal_port = 8080
   force_https = true
