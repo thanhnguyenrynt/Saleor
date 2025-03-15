@@ -1,15 +1,12 @@
 /** @type {import('next').NextConfig} */
 const config = {
 	images: {
-        domains: ['localhost', 'host.docker.internal'],
-        remotePatterns: [
-          {
-            protocol: 'http',
-            hostname: '**',
-          },
-        ],
-        unoptimized: true, // Thêm dòng này để tắt tối ưu hình ảnh
-    },
+		remotePatterns: [
+			{
+				hostname: "*",
+			},
+		],
+	},
 	experimental: {
 		typedRoutes: false,
 	},
