@@ -60,6 +60,11 @@ yarn-debug.log
 .cache/
 
 # Environment variables
+# All env files
+*.env
+.env.*
+.env-*
+.env_*
 .env
 .env.local
 .env.development.local

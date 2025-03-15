@@ -1,0 +1,25 @@
+app = "saleor-api"  # tên app bạn đã chọn
+primary_region = "sin"  # khu vực bạn đã chọn
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8000"
+  PYTHONUNBUFFERED = "1"
+  DASHBOARD_URL = "https://saleor-app.fly.dev/"
+  DEFAULT_FROM_EMAIL = "noreply@example.com"
+  ALLOWED_HOSTS = "saleor-app.fly.dev,localhost,127.0.0.1"
+  ALLOWED_CORS_ORIGINS = "https://saleor-app.fly.dev"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[statics]]
+  guest_path = "/app/static"
+  url_prefix = "/static"
