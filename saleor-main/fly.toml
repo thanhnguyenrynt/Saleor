@@ -2,7 +2,7 @@ app = "saleor-api"  # tên app bạn đã chọn
 primary_region = "sin"  # khu vực bạn đã chọn
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = "saleor-main/Dockerfile"
 
 [env]
   PORT = "8000"
