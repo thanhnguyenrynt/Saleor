@@ -7,27 +7,28 @@ primary_region = "sin"
 [env]
   PORT = "8000"
   PYTHONUNBUFFERED = "1"
-  DASHBOARD_URL = "https://saleor-api.fly.dev/"  # Sửa URL để khớp với app name
-  DEFAULT_FROM_EMAIL = "noreply@example.com"
-  ALLOWED_HOSTS = "saleor-api.fly.dev,localhost,127.0.0.1,*"  # Thêm * và sửa domain
-  ALLOWED_CORS_ORIGINS = "https://saleor-api.fly.dev"  # Sửa URL để khớp với app name
+  ALLOWED_HOSTS = "saleor-api.fly.dev,localhost,127.0.0.1,*"
+  ALLOWED_CORS_ORIGINS = "https://saleor-api.fly.dev"
+  # Thêm debug để xem lỗi chi tiết
+  DEBUG = "True"
+  
+
+# XÓA phần processes để sử dụng CMD trong Dockerfile
+# [processes]
+#  app = "uvicorn saleor.asgi:application --host=0.0.0.0 --port=8000 --workers=1 --lifespan=off"
 
 [http_service]
-  internal_port = 8000  # Sửa từ 8080 thành 8000 để khớp với PORT
+  internal_port = 8000
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
   processes = ["app"]
 
-# Thêm health check rõ ràng
-[checks]
-  [checks.alive]
-    type = "tcp"
-    interval = "15s"
-    timeout = "2s"
-    grace_period = "30s"
+# Đơn giản hóa - bỏ checks và statics nếu đang gây vấn đề
 
-[[statics]]
-  guest_path = "/app/static"
-  url_prefix = "/static"
+# Tăng RAM lên 1GB
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 1024
