@@ -69,13 +69,16 @@ export default defineConfig(({ command, mode }) => {
 
   const sourcemap = !SKIP_SOURCEMAPS;
 
+  const isWindows = process.platform === 'win32';
+  const entryPath = isWindows ? "/index.tsx" : path.resolve(__dirname, "src", "index.tsx");
+
   const plugins = [
     react(),
     CodeInspectorPlugin({
       bundler: "vite",
     }),
     createHtmlPlugin({
-      entry: path.resolve(__dirname, "src", "index.tsx"),
+      entry: entryPath,
       template: "index.html",
       inject: {
         data: {
