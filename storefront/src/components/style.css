@@ -1,0 +1,37 @@
+.tShirtDesignerContainer {
+  width: 100%;
+  min-height: 600px;
+  position: relative;
+}
+
+.toolBtn {
+  background-color: transparent;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.toolBtn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(4px);
+}
+
+.thumbnail {
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.thumbnail.active, .active {
+  opacity: 1;
+  border: 2px solid #4f46e5;
+  border-radius: 4px;
+}
+
+/* Các styles khác */

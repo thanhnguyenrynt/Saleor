@@ -13,7 +13,7 @@ import { formatMoney, formatMoneyRange } from "@/lib/utils";
 import { CheckoutAddLineDocument, ProductDetailsDocument, ProductListDocument } from "@/gql/graphql";
 import * as Checkout from "@/lib/checkout";
 import { AvailabilityMessage } from "@/ui/components/AvailabilityMessage";
-
+import { DesignButton} from "@/components/DesignButton";
 export async function generateMetadata(
 	{
 		params,
@@ -88,7 +88,7 @@ export default async function Page({
 		},
 		revalidate: 60,
 	});
-
+	const isCustomizable = true
 	if (!product) {
 		notFound();
 	}
@@ -209,8 +209,14 @@ export default async function Page({
 							/>
 						)}
 						<AvailabilityMessage isAvailable={isAvailable} />
-						<div className="mt-8">
+						<div className="mt-8 flex space-x-4">
 							<AddButton disabled={!selectedVariantID || !selectedVariant?.quantityAvailable} />
+							{/* Thêm nút Design với điều kiện sản phẩm có thể thiết kế */}
+							<DesignButton
+								productImage={firstImage?.url || ""}
+								productName={product.name}
+								isCustomizable={isCustomizable}
+							/>
 						</div>
 						{description && (
 							<div className="mt-8 space-y-6 text-sm text-neutral-500">
