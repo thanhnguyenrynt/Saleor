@@ -511,17 +511,17 @@ class TShirtDesigner {
 
     layer.on('dragmove', (e) => {
         const node = e.target;
-        const pos = node.position();
+        // const pos = node.position();
         const newPos = limitDragBounds(this.currentStage, node);
         node.position(newPos);
     });
 
     // Xử lý transform events để đảm bảo giới hạn khi transform
-    transformer.on('transform', (e) => {
+    transformer.on('transform', () => {
         const nodes = transformer.nodes();
         if (nodes.length > 0) {
             const node = nodes[0];
-            const pos = node.position();
+            // const pos = node.position();
             const newPos = limitDragBounds(this.currentStage, node);
             node.position(newPos);
         }
@@ -1265,260 +1265,260 @@ class TShirtDesigner {
     }
   }
 
-  public async importDesignFromJson(jsonContent: string) {
-    try {
-      const designInfo: DesignInfo = JSON.parse(jsonContent);
+  // public async importDesignFromJson(jsonContent: string) {
+  //   try {
+  //     const designInfo: DesignInfo = JSON.parse(jsonContent);
 
-      // Đặt màu nền
-      this.changeBackgroundColor(designInfo.backgroundColor);
+  //     // Đặt màu nền
+  //     this.changeBackgroundColor(designInfo.backgroundColor);
 
-      // Cập nhật kích thước và vị trí của cả hai stage trước khi import
-      const frontImage = document.getElementById('frontImage') as HTMLImageElement;
-      const backImage = document.getElementById('backImage') as HTMLImageElement;
+  //     // Cập nhật kích thước và vị trí của cả hai stage trước khi import
+  //     const frontImage = document.getElementById('frontImage') as HTMLImageElement;
+  //     const backImage = document.getElementById('backImage') as HTMLImageElement;
       
-      if (frontImage && backImage) {
-        this.updateStagePosition(this.frontStage, frontImage);
-        this.updateStagePosition(this.backStage, backImage);
-        console.log('Updated stage positions before import');
-      }
+  //     if (frontImage && backImage) {
+  //       this.updateStagePosition(this.frontStage, frontImage);
+  //       this.updateStagePosition(this.backStage, backImage);
+  //       console.log('Updated stage positions before import');
+  //     }
 
-      // Hàm helper để import các đối tượng vào stage
-      const importToStage = async (stageConfig: StageConfig, design: { images: any[], texts: any[], shapes: any[] }) => {
-        if (!stageConfig.stage || !stageConfig.layer) {
-          console.error('Stage or layer not initialized');
-          return;
-        }
+  //     // Hàm helper để import các đối tượng vào stage
+  //     const importToStage = async (stageConfig: StageConfig, design: { images: any[], texts: any[], shapes: any[] }) => {
+  //       if (!stageConfig.stage || !stageConfig.layer) {
+  //         console.error('Stage or layer not initialized');
+  //         return;
+  //       }
 
-        console.log('Importing to stage:', stageConfig === this.frontStage ? 'front' : 'back');
-        console.log('Stage dimensions:', {
-          width: stageConfig.stage.width(),
-          height: stageConfig.stage.height()
-        });
+  //       console.log('Importing to stage:', stageConfig === this.frontStage ? 'front' : 'back');
+  //       console.log('Stage dimensions:', {
+  //         width: stageConfig.stage.width(),
+  //         height: stageConfig.stage.height()
+  //       });
 
-        // Xóa tất cả các đối tượng hiện tại trên stage (trừ transformer)
-        const nodes = stageConfig.layer.children.slice();
-        nodes.forEach(node => {
-          if (!(node instanceof Konva.Transformer)) {
-            node.destroy();
-          }
-        });
+  //       // Xóa tất cả các đối tượng hiện tại trên stage (trừ transformer)
+  //       const nodes = stageConfig.layer.children.slice();
+  //       nodes.forEach(node => {
+  //         if (!(node instanceof Konva.Transformer)) {
+  //           node.destroy();
+  //         }
+  //       });
 
-        // Import images
-        for (const imageInfo of design.images) {
-          const img = new Image();
-          await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-            img.src = imageInfo.src;
-          });
+  //       // Import images
+  //       for (const imageInfo of design.images) {
+  //         const img = new Image();
+  //         await new Promise((resolve, reject) => {
+  //           img.onload = resolve;
+  //           img.onerror = reject;
+  //           img.src = imageInfo.src;
+  //         });
 
-          const imgNode = new Konva.Image({
-            image: img,
-            x: imageInfo.x,
-            y: imageInfo.y,
-            width: imageInfo.width,
-            height: imageInfo.height,
-            rotation: imageInfo.rotation,
-            scaleX: imageInfo.scaleX,
-            scaleY: imageInfo.scaleY,
-            draggable: true,
-          });
+  //         const imgNode = new Konva.Image({
+  //           image: img,
+  //           x: imageInfo.x,
+  //           y: imageInfo.y,
+  //           width: imageInfo.width,
+  //           height: imageInfo.height,
+  //           rotation: imageInfo.rotation,
+  //           scaleX: imageInfo.scaleX,
+  //           scaleY: imageInfo.scaleY,
+  //           draggable: true,
+  //         });
 
-          stageConfig.layer.add(imgNode);
-          console.log('Added image to stage:', {
-            x: imageInfo.x,
-            y: imageInfo.y,
-            width: imageInfo.width,
-            height: imageInfo.height
-          });
-        }
+  //         stageConfig.layer.add(imgNode);
+  //         console.log('Added image to stage:', {
+  //           x: imageInfo.x,
+  //           y: imageInfo.y,
+  //           width: imageInfo.width,
+  //           height: imageInfo.height
+  //         });
+  //       }
 
-        // Import texts
-        for (const textInfo of design.texts) {
-          const textNode = new Konva.Text({
-            text: textInfo.text,
-            x: textInfo.x,
-            y: textInfo.y,
-            rotation: textInfo.rotation,
-            scaleX: textInfo.scaleX,
-            scaleY: textInfo.scaleY,
-            fontFamily: textInfo.fontFamily,
-            fontSize: textInfo.fontSize,
-            fontStyle: textInfo.fontStyle,
-            fontWeight: textInfo.fontWeight,
-            fill: textInfo.fill,
-            align: textInfo.align,
-            draggable: true,
-          });
+  //       // Import texts
+  //       for (const textInfo of design.texts) {
+  //         const textNode = new Konva.Text({
+  //           text: textInfo.text,
+  //           x: textInfo.x,
+  //           y: textInfo.y,
+  //           rotation: textInfo.rotation,
+  //           scaleX: textInfo.scaleX,
+  //           scaleY: textInfo.scaleY,
+  //           fontFamily: textInfo.fontFamily,
+  //           fontSize: textInfo.fontSize,
+  //           fontStyle: textInfo.fontStyle,
+  //           fontWeight: textInfo.fontWeight,
+  //           fill: textInfo.fill,
+  //           align: textInfo.align,
+  //           draggable: true,
+  //         });
 
-          stageConfig.layer.add(textNode);
-          console.log('Added text to stage:', {
-            text: textInfo.text,
-            x: textInfo.x,
-            y: textInfo.y
-          });
-        }
+  //         stageConfig.layer.add(textNode);
+  //         console.log('Added text to stage:', {
+  //           text: textInfo.text,
+  //           x: textInfo.x,
+  //           y: textInfo.y
+  //         });
+  //       }
 
-        // Import shapes
-        for (const shapeInfo of design.shapes) {
-          let shape: Konva.Shape | null = null;
+  //       // Import shapes
+  //       for (const shapeInfo of design.shapes) {
+  //         let shape: Konva.Shape | null = null;
 
-          switch (shapeInfo.type) {
-            case 'circle':
-              shape = new Konva.Circle({
-                x: shapeInfo.x,
-                y: shapeInfo.y,
-                radius: shapeInfo.radius,
-                fill: shapeInfo.fill,
-                stroke: shapeInfo.stroke,
-                strokeWidth: shapeInfo.strokeWidth,
-                rotation: shapeInfo.rotation,
-                scaleX: shapeInfo.scaleX,
-                scaleY: shapeInfo.scaleY,
-                draggable: true,
-              });
-              break;
+  //         switch (shapeInfo.type) {
+  //           case 'circle':
+  //             shape = new Konva.Circle({
+  //               x: shapeInfo.x,
+  //               y: shapeInfo.y,
+  //               radius: shapeInfo.radius,
+  //               fill: shapeInfo.fill,
+  //               stroke: shapeInfo.stroke,
+  //               strokeWidth: shapeInfo.strokeWidth,
+  //               rotation: shapeInfo.rotation,
+  //               scaleX: shapeInfo.scaleX,
+  //               scaleY: shapeInfo.scaleY,
+  //               draggable: true,
+  //             });
+  //             break;
 
-            case 'rect':
-              shape = new Konva.Rect({
-                x: shapeInfo.x,
-                y: shapeInfo.y,
-                width: shapeInfo.width,
-                height: shapeInfo.height,
-                fill: shapeInfo.fill,
-                stroke: shapeInfo.stroke,
-                strokeWidth: shapeInfo.strokeWidth,
-                rotation: shapeInfo.rotation,
-                scaleX: shapeInfo.scaleX,
-                scaleY: shapeInfo.scaleY,
-                draggable: true,
-              });
-              break;
+  //           case 'rect':
+  //             shape = new Konva.Rect({
+  //               x: shapeInfo.x,
+  //               y: shapeInfo.y,
+  //               width: shapeInfo.width,
+  //               height: shapeInfo.height,
+  //               fill: shapeInfo.fill,
+  //               stroke: shapeInfo.stroke,
+  //               strokeWidth: shapeInfo.strokeWidth,
+  //               rotation: shapeInfo.rotation,
+  //               scaleX: shapeInfo.scaleX,
+  //               scaleY: shapeInfo.scaleY,
+  //               draggable: true,
+  //             });
+  //             break;
 
-            case 'triangle':
-              shape = new Konva.RegularPolygon({
-                x: shapeInfo.x,
-                y: shapeInfo.y,
-                sides: 3,
-                radius: shapeInfo.radius,
-                fill: shapeInfo.fill,
-                stroke: shapeInfo.stroke,
-                strokeWidth: shapeInfo.strokeWidth,
-                rotation: shapeInfo.rotation,
-                scaleX: shapeInfo.scaleX,
-                scaleY: shapeInfo.scaleY,
-                draggable: true,
-              });
-              break;
+  //           case 'triangle':
+  //             shape = new Konva.RegularPolygon({
+  //               x: shapeInfo.x,
+  //               y: shapeInfo.y,
+  //               sides: 3,
+  //               radius: shapeInfo.radius,
+  //               fill: shapeInfo.fill,
+  //               stroke: shapeInfo.stroke,
+  //               strokeWidth: shapeInfo.strokeWidth,
+  //               rotation: shapeInfo.rotation,
+  //               scaleX: shapeInfo.scaleX,
+  //               scaleY: shapeInfo.scaleY,
+  //               draggable: true,
+  //             });
+  //             break;
 
-            case 'star':
-              shape = new Konva.Star({
-                x: shapeInfo.x,
-                y: shapeInfo.y,
-                numPoints: shapeInfo.numPoints || 5,
-                innerRadius: shapeInfo.innerRadius,
-                outerRadius: shapeInfo.outerRadius,
-                fill: shapeInfo.fill,
-                stroke: shapeInfo.stroke,
-                strokeWidth: shapeInfo.strokeWidth,
-                rotation: shapeInfo.rotation,
-                scaleX: shapeInfo.scaleX,
-                scaleY: shapeInfo.scaleY,
-                draggable: true,
-              });
-              break;
+  //           case 'star':
+  //             shape = new Konva.Star({
+  //               x: shapeInfo.x,
+  //               y: shapeInfo.y,
+  //               numPoints: shapeInfo.numPoints || 5,
+  //               innerRadius: shapeInfo.innerRadius,
+  //               outerRadius: shapeInfo.outerRadius,
+  //               fill: shapeInfo.fill,
+  //               stroke: shapeInfo.stroke,
+  //               strokeWidth: shapeInfo.strokeWidth,
+  //               rotation: shapeInfo.rotation,
+  //               scaleX: shapeInfo.scaleX,
+  //               scaleY: shapeInfo.scaleY,
+  //               draggable: true,
+  //             });
+  //             break;
 
-            case 'diamond':
-              shape = new Konva.RegularPolygon({
-                x: shapeInfo.x,
-                y: shapeInfo.y,
-                sides: 4,
-                radius: shapeInfo.radius,
-                fill: shapeInfo.fill,
-                stroke: shapeInfo.stroke,
-                strokeWidth: shapeInfo.strokeWidth,
-                rotation: shapeInfo.rotation + 45, // Thêm 45 độ để tạo hình thoi
-                scaleX: shapeInfo.scaleX,
-                scaleY: shapeInfo.scaleY,
-                draggable: true,
-              });
-              break;
+  //           case 'diamond':
+  //             shape = new Konva.RegularPolygon({
+  //               x: shapeInfo.x,
+  //               y: shapeInfo.y,
+  //               sides: 4,
+  //               radius: shapeInfo.radius,
+  //               fill: shapeInfo.fill,
+  //               stroke: shapeInfo.stroke,
+  //               strokeWidth: shapeInfo.strokeWidth,
+  //               rotation: shapeInfo.rotation + 45, // Thêm 45 độ để tạo hình thoi
+  //               scaleX: shapeInfo.scaleX,
+  //               scaleY: shapeInfo.scaleY,
+  //               draggable: true,
+  //             });
+  //             break;
 
-            case 'hexagon':
-              shape = new Konva.RegularPolygon({
-                x: shapeInfo.x,
-                y: shapeInfo.y,
-                sides: 6,
-                radius: shapeInfo.radius,
-                fill: shapeInfo.fill,
-                stroke: shapeInfo.stroke,
-                strokeWidth: shapeInfo.strokeWidth,
-                rotation: shapeInfo.rotation,
-                scaleX: shapeInfo.scaleX,
-                scaleY: shapeInfo.scaleY,
-                draggable: true,
-              });
-              break;
+  //           case 'hexagon':
+  //             shape = new Konva.RegularPolygon({
+  //               x: shapeInfo.x,
+  //               y: shapeInfo.y,
+  //               sides: 6,
+  //               radius: shapeInfo.radius,
+  //               fill: shapeInfo.fill,
+  //               stroke: shapeInfo.stroke,
+  //               strokeWidth: shapeInfo.strokeWidth,
+  //               rotation: shapeInfo.rotation,
+  //               scaleX: shapeInfo.scaleX,
+  //               scaleY: shapeInfo.scaleY,
+  //               draggable: true,
+  //             });
+  //             break;
 
-            case 'heart':
-              shape = new Konva.Path({
-                x: shapeInfo.x,
-                y: shapeInfo.y,
-                data: 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z',
-                fill: shapeInfo.fill,
-                stroke: shapeInfo.stroke,
-                strokeWidth: shapeInfo.strokeWidth,
-                rotation: shapeInfo.rotation,
-                scaleX: shapeInfo.scaleX,
-                scaleY: shapeInfo.scaleY,
-                draggable: true,
-              });
-              break;
+  //           case 'heart':
+  //             shape = new Konva.Path({
+  //               x: shapeInfo.x,
+  //               y: shapeInfo.y,
+  //               data: 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z',
+  //               fill: shapeInfo.fill,
+  //               stroke: shapeInfo.stroke,
+  //               strokeWidth: shapeInfo.strokeWidth,
+  //               rotation: shapeInfo.rotation,
+  //               scaleX: shapeInfo.scaleX,
+  //               scaleY: shapeInfo.scaleY,
+  //               draggable: true,
+  //             });
+  //             break;
 
-            case 'cloud':
-              shape = new Konva.Path({
-                x: shapeInfo.x,
-                y: shapeInfo.y,
-                data: 'M25.6,11.9c0-0.2,0-0.4,0-0.6c0-3.3-2.7-6-6-6c-2.4,0-4.5,1.4-5.4,3.4c-0.4-0.1-0.8-0.1-1.2-0.1c-3.3,0-6,2.7-6,6c0,0.2,0,0.4,0,0.6C4.1,15.2,2,17.3,2,20c0,2.8,2.2,5,5,5h18c2.8,0,5-2.2,5-5C30,17.3,27.9,15.2,25.6,11.9z',
-                fill: shapeInfo.fill,
-                stroke: shapeInfo.stroke,
-                strokeWidth: shapeInfo.strokeWidth,
-                rotation: shapeInfo.rotation,
-                scaleX: shapeInfo.scaleX,
-                scaleY: shapeInfo.scaleY,
-                draggable: true,
-              });
-              break;
-          }
+  //           case 'cloud':
+  //             shape = new Konva.Path({
+  //               x: shapeInfo.x,
+  //               y: shapeInfo.y,
+  //               data: 'M25.6,11.9c0-0.2,0-0.4,0-0.6c0-3.3-2.7-6-6-6c-2.4,0-4.5,1.4-5.4,3.4c-0.4-0.1-0.8-0.1-1.2-0.1c-3.3,0-6,2.7-6,6c0,0.2,0,0.4,0,0.6C4.1,15.2,2,17.3,2,20c0,2.8,2.2,5,5,5h18c2.8,0,5-2.2,5-5C30,17.3,27.9,15.2,25.6,11.9z',
+  //               fill: shapeInfo.fill,
+  //               stroke: shapeInfo.stroke,
+  //               strokeWidth: shapeInfo.strokeWidth,
+  //               rotation: shapeInfo.rotation,
+  //               scaleX: shapeInfo.scaleX,
+  //               scaleY: shapeInfo.scaleY,
+  //               draggable: true,
+  //             });
+  //             break;
+  //         }
 
-          if (shape) {
-            stageConfig.layer.add(shape);
-            console.log('Added shape to stage:', {
-              type: shapeInfo.type,
-              x: shapeInfo.x,
-              y: shapeInfo.y
-            });
-          }
-        }
+  //         if (shape) {
+  //           stageConfig.layer.add(shape);
+  //           console.log('Added shape to stage:', {
+  //             type: shapeInfo.type,
+  //             x: shapeInfo.x,
+  //             y: shapeInfo.y
+  //           });
+  //         }
+  //       }
 
-        stageConfig.layer.draw();
-        console.log('Layer drawn for stage:', stageConfig === this.frontStage ? 'front' : 'back');
-      };
+  //       stageConfig.layer.draw();
+  //       console.log('Layer drawn for stage:', stageConfig === this.frontStage ? 'front' : 'back');
+  //     };
 
-      // Import thiết kế cho cả hai mặt
-      await importToStage(this.frontStage, designInfo.frontDesign);
-      await importToStage(this.backStage, designInfo.backDesign);
+  //     // Import thiết kế cho cả hai mặt
+  //     await importToStage(this.frontStage, designInfo.frontDesign);
+  //     await importToStage(this.backStage, designInfo.backDesign);
 
-      // Cập nhật lại stage hiện tại
-      const currentSide = this.currentStage === this.frontStage ? 'front' : 'back';
-      this.switchToStage(currentSide);
-      console.log('Switched back to current stage:', currentSide);
+  //     // Cập nhật lại stage hiện tại
+  //     const currentSide = this.currentStage === this.frontStage ? 'front' : 'back';
+  //     this.switchToStage(currentSide);
+  //     console.log('Switched back to current stage:', currentSide);
 
-    } catch (error) {
-      console.error('Error importing design:', error);
-      throw new Error('Invalid design file format');
-    }
-  }
+  //   } catch (error) {
+  //     console.error('Error importing design:', error);
+  //     throw new Error('Invalid design file format');
+  //   }
+  // }
 
   public copySelectedNode() {
     if (!this.currentStage.selectedNode) return;

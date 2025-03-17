@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from 'react';
+import React, {  } from 'react';
 import dynamic from 'next/dynamic';
 
 // Import Designer component với dynamic import để tránh lỗi SSR
@@ -27,16 +27,16 @@ interface DesignDialogProps {
 export function DesignDialog({ 
   isOpen, 
   onClose, 
-  productImage, 
+  // productImage, 
   productName, 
-  onSaveDesign 
+  // onSaveDesign 
 }: DesignDialogProps) {
   // Kiểm tra nếu dialog không mở thì không render gì cả
   if (!isOpen) return null;
 
-  const handleSaveDesign = (designData: any) => {
-    onSaveDesign(designData);
-  };
+  // const handleSaveDesign = (designData: any) => {
+  //   onSaveDesign(designData);
+  // };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black bg-opacity-50 flex items-center justify-center p-4">
@@ -61,7 +61,7 @@ export function DesignDialog({
         {/* Body */}
         <div className="flex-1 overflow-auto p-6 bg-gray-50">
           <div className="h-full min-h-[500px]">
-            <Designer onSaveDesign={handleSaveDesign} />
+            <Designer />
           </div>
         </div>
 

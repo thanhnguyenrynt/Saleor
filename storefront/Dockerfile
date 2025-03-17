@@ -2,15 +2,21 @@ FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
-RUN apk add --no-cache libc6-compat
+# Add python, build tools and Cairo dependencies for canvas
+RUN apk add --no-cache libc6-compat python3 make g++ \
+    cairo-dev jpeg-dev pango-dev giflib-dev pixman-dev pangomm-dev libjpeg-turbo-dev freetype-dev
+
 WORKDIR /app
 
 # Get PNPM version from package.json
-RUN export PNPM_VERSION=$(cat package.json | jq '.engines.pnpm' | sed -E 's/[^0-9.]//g')
-
 COPY package.json pnpm-lock.yaml ./
+RUN npm install -g jq && export PNPM_VERSION=$(cat package.json | jq -r '.engines.pnpm' | sed -E 's/[^0-9.]//g')
 RUN npm install -g pnpm@$PNPM_VERSION
+
+# Force canvas to use skia
+ENV CANVAS_FORCE_SKIA=1
+
+# Install dependencies
 RUN pnpm i --frozen-lockfile --prefer-offline
 
 # Rebuild the source code only when needed
@@ -30,8 +36,14 @@ ENV NEXT_PUBLIC_SALEOR_API_URL=https://saleor-api.fly.dev/graphql/
 ARG NEXT_PUBLIC_STOREFRONT_URL
 ENV NEXT_PUBLIC_STOREFRONT_URL=https://saleor-storefront.fly.dev
 
-# Get PNPM version from package.json
-RUN export PNPM_VERSION=$(cat package.json | jq '.engines.pnpm' | sed -E 's/[^0-9.]//g')
+# Install build dependencies for canvas in builder stage as well
+RUN apk add --no-cache python3 make g++ \
+    cairo-dev jpeg-dev pango-dev giflib-dev pixman-dev pangomm-dev libjpeg-turbo-dev freetype-dev
+
+# Force canvas to use skia in builder stage
+ENV CANVAS_FORCE_SKIA=1
+
+RUN npm install -g jq && export PNPM_VERSION=$(cat package.json | jq -r '.engines.pnpm' | sed -E 's/[^0-9.]//g')
 RUN npm install -g pnpm@$PNPM_VERSION
 RUN pnpm build
 
@@ -48,6 +60,9 @@ ENV NEXT_PUBLIC_SALEOR_API_URL=${NEXT_PUBLIC_SALEOR_API_URL}
 ARG NEXT_PUBLIC_STOREFRONT_URL
 ENV NEXT_PUBLIC_STOREFRONT_URL=${NEXT_PUBLIC_STOREFRONT_URL}
 
+# Add runtime libraries needed by canvas
+RUN apk add --no-cache cairo jpeg pango giflib pixman pangomm libjpeg-turbo freetype
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
@@ -61,8 +76,8 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 
 USER nextjs
-
 
 CMD ["node", "server.js"]

@@ -17,11 +17,11 @@ export function DesignButton({
   onDesignSaved 
 }: DesignButtonProps) {
   const [showDesigner, setShowDesigner] = useState(false);
-  const [designData, setDesignData] = useState<any>(null);
+//   const [designData, setDesignData] = useState<any>(null);
 
   // Xử lý khi lưu thiết kế
   const handleSaveDesign = (data: any) => {
-    setDesignData(data);
+    // setDesignData(data);
     setShowDesigner(false);
     if (onDesignSaved) {
       onDesignSaved(data);

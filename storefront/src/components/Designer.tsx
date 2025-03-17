@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './style.css';
-import dynamic from 'next/dynamic';
+// import dynamic from 'next/dynamic';
 // Import TShirtDesigner class normally since it's not a React component
 import TShirtDesigner from './utils/tshirtDesigner';
 import { initializeModals } from './utils/modal';
@@ -645,9 +645,9 @@ function Designer() {
                 if (file && designerRef.current) {
                   try {
                     const reader = new FileReader();
-                    reader.onload = async (event) => {
+                    reader.onload = async () => {
                       try {
-                        await designerRef.current?.importDesignFromJson(event.target?.result as string);
+                        // await designerRef.current?.importDesignFromJson(event.target?.result as string);
                         setIsImportModalOpen(false);
                         setImportError(null);
                       } catch (error) {
