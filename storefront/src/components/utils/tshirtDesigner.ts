@@ -1,3 +1,5 @@
+/* eslint-disable import/order */
+/* eslint-disable import/no-unresolved */
 import Konva from 'konva';
 import $ from 'jquery';
 

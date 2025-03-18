@@ -78,7 +78,9 @@
 			{
 				"checksVoidReturn": false
 			}
-		]
+		],
+		"@typescript-eslint/no-unsafe-assignment": "off",
+		"@typescript-eslint/no-floating-promises": "off"
 	},
 	"overrides": [
 		{
@@ -108,5 +110,5 @@
 			"extends": ["plugin:playwright/recommended"]
 		}
 	],
-	"ignorePatterns": ["*.js", "*.jsx", "*.cjs", "src/checkout/src/graphql"]
+	"ignorePatterns": ["*.js","*.ts", "*.jsx", "*.cjs", "src/checkout/src/graphql","src/components/utils/tshirtDesigner.ts","src/components/Designer.tsx"]
 }

@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
+import { AppBar, Toolbar, Typography, IconButton, Box, Paper, Modal } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './style.css';
 // import dynamic from 'next/dynamic';
 // Import TShirtDesigner class normally since it's not a React component
 import TShirtDesigner from './utils/tshirtDesigner';
 import { initializeModals } from './utils/modal';
-import { AppBar, Toolbar, Typography, IconButton, Box, Paper, Modal } from '@mui/material';
-import { styled } from '@mui/material/styles';
 
-const StyledButton = styled(IconButton)(({ theme }) => ({
+
+const StyledButton = styled(IconButton)(({  }) => ({
   backgroundColor: 'transparent',
   border: 'none',
   padding: '6px',
