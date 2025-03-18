@@ -1,7 +1,7 @@
 import { CategoryListDocument } from "@/gql/graphql";
 import { executeGraphQL } from "@/lib/graphql";
 import { CategoryElement } from "@/ui/components/CategoryElement";
-import { Pagination } from "@/ui/components/Pagination";
+// import { Pagination } from "@/ui/components/Pagination";
 
 export const metadata = {
 	title: "ACME Storefront, powered by Saleor & Next.js",
@@ -9,7 +9,7 @@ export const metadata = {
 		"Storefront Next.js Example for building performant e-commerce experiences with Saleor - the composable, headless commerce platform for global brands.",
 };
 
-export default async function Page({ params }: { params: { channel: string } }) {
+export default async function Page({  }: { params: { channel: string } }) {
 	const { categories } = await executeGraphQL(CategoryListDocument, {
 		variables: {
 			first: 9,

@@ -33,9 +33,6 @@ export function CategoryElement({
           )}
           <div className="p-4">
             <h3 className="text-lg font-medium text-neutral-900">{category.name}</h3>
-            {category.products?.totalCount !== undefined && (
-              <p className="mt-1 text-sm text-neutral-500">{category.products.totalCount} products</p>
-            )}
           </div>
         </div>
       </LinkWithChannel>
