@@ -11,14 +11,14 @@ export const Logo = () => {
 	if (pathname === "/") {
 		return (
 			<h1 className="flex items-center font-bold" aria-label="homepage">
-				{companyName}
+				<img src="https://d1dif2dtw17xb9.cloudfront.net/images/logo-text.svg" alt="Logo" />
 			</h1>
 		);
 	}
 	return (
 		<div className="flex items-center font-bold">
 			<LinkWithChannel aria-label="homepage" href="/">
-				{companyName}
+				<img src="https://d1dif2dtw17xb9.cloudfront.net/images/logo-text.svg" alt="Logo" className="h-8" />
 			</LinkWithChannel>
 		</div>
 	);

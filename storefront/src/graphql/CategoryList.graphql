@@ -1,0 +1,21 @@
+query CategoryList ($first: Int = 9){
+  categories(first: $first, level: 0) {
+    totalCount
+    edges {
+      node {
+        ...CategoryListItem
+      }
+    }
+  }
+}
+
+fragment CategoryListItem on Category {
+  id
+  name
+  slug
+  description
+  backgroundImage {
+    url
+    alt
+  }
+}

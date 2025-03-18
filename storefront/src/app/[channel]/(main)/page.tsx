@@ -1,6 +1,7 @@
-import { ProductListByCollectionDocument } from "@/gql/graphql";
+import { CategoryListDocument } from "@/gql/graphql";
 import { executeGraphQL } from "@/lib/graphql";
-import { ProductList } from "@/ui/components/ProductList";
+import { CategoryElement } from "@/ui/components/CategoryElement";
+import { Pagination } from "@/ui/components/Pagination";
 
 export const metadata = {
 	title: "ACME Storefront, powered by Saleor & Next.js",
@@ -9,24 +10,29 @@ export const metadata = {
 };
 
 export default async function Page({ params }: { params: { channel: string } }) {
-	const data = await executeGraphQL(ProductListByCollectionDocument, {
+	const { categories } = await executeGraphQL(CategoryListDocument, {
 		variables: {
-			slug: "featured-products",
-			channel: params.channel,
+			first: 9,
 		},
-		revalidate: 60,
+		revalidate: 60, // Cache for 60 seconds
 	});
-
-	if (!data.collection?.products) {
-		return null;
-	}
-
-	const products = data.collection?.products.edges.map(({ node: product }) => product);
-
+	const totalCategories = categories?.totalCount || 0;
 	return (
 		<section className="mx-auto max-w-7xl p-8 pb-16">
 			<h2 className="sr-only">Product list</h2>
-			<ProductList products={products} />
+			{totalCategories === 0 ? (
+				<div className="py-8 text-center">
+					<h2 className="text-xl font-medium">No categories found</h2>
+				</div>
+			) : (
+				<>
+					<div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+						{categories?.edges.map(({ node }) => (
+							<CategoryElement key={node.id} category={node} />
+						))}
+					</div>
+				</>
+			)}
 		</section>
 	);
 }
