@@ -1,34 +1,24 @@
 # fly.toml - Saleor Dashboard Configuration
 app = "saleor-admin"
-primary_region = "sin"  # Change to your preferred region
+primary_region = "sin"
 
 [build]
-  dockerfile = "Dockerfile"  # Make sure your Dockerfile is configured for Dashboard
+  dockerfile = "Dockerfile"
 
 [env]
-  PORT = "8080"
+  PORT = "80"  # Thay đổi từ 8080 sang 80
   NODE_ENV = "production"
-  # Saleor API URL - replace with your actual Saleor API endpoint
-  API_URI = "https://saleor-api.fly.dev/graphql/"
-  # Dashboard URL
+  API_URL = "https://saleor-api.fly.dev/graphql/"  # Đổi tên từ API_URI sang API_URL để phù hợp với Dockerfile
   APP_MOUNT_URI = "/"
-  # Set this to match your Saleor storefront domain
-  ALLOWED_CLIENT_HOSTS = "saleor-storefront.fly.dev,primepod.id.vn"
-  # Plugins directory
+  ALLOWED_CLIENT_HOSTS = "saleor-storefront.fly.dev,admin.primepod.id.vn"
   PLUGINS_DIR = "./plugins"
-  # Set to true if you're using Sentry
   SENTRY_DSN = ""
-  # Dashboard static files configuration
   STATIC_URL = "/dashboard-assets/"
-
-# Optional: Configure Sentry for monitoring
-# [env.SENTRY]
-#   DSN = "your-sentry-dsn-here"
-#   ENVIRONMENT = "production"
-#   RELEASE = "dashboard@__VERSION__"
+  # Thêm HOST
+  HOST = "0.0.0.0"
 
 [http_service]
-  internal_port = 8080
+  internal_port = 80  # Thay đổi từ 8080 sang 80
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
@@ -42,7 +32,7 @@ primary_region = "sin"  # Change to your preferred region
 
 [[services]]
   protocol = "tcp"
-  internal_port = 8080
+  internal_port = 80  # Thay đổi từ 8080 sang 80
 
   [[services.ports]]
     port = 80
@@ -71,7 +61,7 @@ primary_region = "sin"  # Change to your preferred region
 
 [checks]
   [checks.health]
-    port = 8080
+    port = 80  # Thay đổi từ 8080 sang 80
     type = "http"
     interval = "15s"
     timeout = "2s"
@@ -79,4 +69,13 @@ primary_region = "sin"  # Change to your preferred region
     method = "get"
     path = "/health"
     protocol = "http"
-    
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
+
+# Nếu bạn thực sự cần mount volume
+[mounts]
+  source = "dashboard_data"
+  destination = "/app/plugins"
