@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Box, Paper, Modal } from '@mui/material';
+import { Typography, IconButton, Box, Paper, Modal } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import './style.css';
@@ -145,27 +145,42 @@ function Designer() {
     '#15aeda', '#a5def8', '#0f77c0', '#3469b7', '#c50404'
   ];
 
+  const handleImport = async (file: File) => {
+    if (designerRef.current) {
+      try {
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+          try {
+            if (event.target?.result) {
+              await designerRef.current?.importDesignFromJson(event.target.result as string);
+              setIsImportModalOpen(false);
+              setImportError(null);
+            }
+          } catch (error) {
+            setImportError('Invalid design file format');
+          }
+        };
+        reader.readAsText(file);
+      } catch (error) {
+        setImportError('Error reading file');
+      }
+    }
+  };
+
   return (
     <>
-      <AppBar position="static" sx={{ backgroundColor: 'rgb(243 244 246)', borderBottom: '1px solid rgb(229 231 235)' }}>
-        <Toolbar variant="dense" sx={{ padding: '8px' }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 500, color: 'rgb(31 41 55)' }}>
-            Design Functions
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
       <Box className="w-full">
         <Box className="relative">
           <Paper
             id="rightMenu"
             elevation={3}
             sx={{
-              position: 'fixed',
+              position: 'absolute',
               left: 0,
-              top: '45px',
+              top: 0,
               bottom: 0,
-              width: '60px',
+              width: '7%',
+              height: '100%',
               backgroundColor: '#18044c',
               py: 1,
               px: 0.5,
@@ -182,7 +197,7 @@ function Designer() {
               <i className="fas fa-palette text-base"></i>
               <Typography variant="caption" sx={{ fontSize: '10px' }}>Colors</Typography>
             </StyledButton>
-            <button className="bg-transparent border-none p-1.5 rounded cursor-pointer text-white hover:bg-white/10 hover:translate-x-1 transition-all flex flex-col items-center gap-0.5">
+            <StyledButton className="bg-transparent border-none p-1.5 rounded cursor-pointer text-white hover:bg-white/10 hover:translate-x-1 transition-all flex flex-col items-center gap-0.5">
               <label id="uploadFromPC" className="cursor-pointer flex flex-col items-center gap-0.5">
                 <i className="fas fa-images text-base"></i>
                 <span className="text-[10px]">Images</span>
@@ -194,7 +209,7 @@ function Designer() {
                   accept="image/jpeg"
                 />
               </label>
-            </button>
+            </StyledButton>
             <button
               id="addingText"
               data-modal-target="editorTextModal"
@@ -240,7 +255,7 @@ function Designer() {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              minHeight: 'calc(100vh - 45px)',
+              minHeight: '500px',
             }}
           >
             <Box sx={{ position: 'relative', maxWidth: '600px', mx: 'auto' }}>
@@ -339,11 +354,12 @@ function Designer() {
             id="leftMenu"
             elevation={3}
             sx={{
-              position: 'fixed',
+              position: 'absolute',
               right: 0,
-              top: '45px',
+              top: 0,
               bottom: 0,
-              width: '60px',
+              width: '7%',
+              height: '100%',
               backgroundColor: '#f8ecfc',
               py: 1,
               px: 0.5,
@@ -397,8 +413,8 @@ function Designer() {
                   src="/img/crew_front.png"
                   alt="Front View"
                   sx={{
-                    width: '40px',
-                    height: '40px',
+                    width: '100%',
+                    height: '100%',
                     objectFit: 'cover',
                     borderRadius: '4px',
                   }}
@@ -444,8 +460,8 @@ function Designer() {
                   src="/img/crew_back.png"
                   alt="Back View"
                   sx={{
-                    width: '40px',
-                    height: '40px',
+                    width: '100%',
+                    height: '100%',
                     objectFit: 'cover',
                     borderRadius: '4px',
                   }}
@@ -643,22 +659,8 @@ function Designer() {
               id="jsonFileInput"
               onChange={async (e) => {
                 const file = e.target.files?.[0];
-                if (file && designerRef.current) {
-                  try {
-                    const reader = new FileReader();
-                    reader.onload = async () => {
-                      try {
-                        // await designerRef.current?.importDesignFromJson(event.target?.result as string);
-                        setIsImportModalOpen(false);
-                        setImportError(null);
-                      } catch (error) {
-                        setImportError('Invalid design file format');
-                      }
-                    };
-                    reader.readAsText(file);
-                  } catch (error) {
-                    setImportError('Error reading file');
-                  }
+                if (file) {
+                  await handleImport(file);
                 }
               }}
             />
