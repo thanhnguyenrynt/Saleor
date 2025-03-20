@@ -1,4 +1,4 @@
-query CategoryList ($first: Int = 9){
+query CategoryList ($first: Int = 24){
   categories(first: $first, level: 0) {
     totalCount
     edges {
