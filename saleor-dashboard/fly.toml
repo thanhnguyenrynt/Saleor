@@ -1,0 +1,81 @@
+# fly.toml - Saleor Dashboard Configuration
+app = "saleor-admin"
+primary_region = "sin"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "80"  # Thay đổi từ 8080 sang 80
+  NODE_ENV = "production"
+  API_URL = "https://saleor-api.fly.dev/graphql/"  # Đổi tên từ API_URI sang API_URL để phù hợp với Dockerfile
+  APP_MOUNT_URI = "/"
+  ALLOWED_CLIENT_HOSTS = "saleor-storefront.fly.dev,admin.primepod.id.vn"
+  PLUGINS_DIR = "./plugins"
+  SENTRY_DSN = ""
+  STATIC_URL = "/dashboard-assets/"
+  # Thêm HOST
+  HOST = "0.0.0.0"
+
+[http_service]
+  internal_port = 80  # Thay đổi từ 8080 sang 80
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 1000
+    soft_limit = 500
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 80  # Thay đổi từ 8080 sang 80
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.concurrency]
+    type = "connections"
+    hard_limit = 1000
+    soft_limit = 500
+
+[metrics]
+  port = 9091
+  path = "/metrics"
+
+[deploy]
+  release_command = "echo 'Deployment Started'"
+  strategy = "immediate"
+
+[experimental]
+  auto_rollback = true
+
+[checks]
+  [checks.health]
+    port = 80  # Thay đổi từ 8080 sang 80
+    type = "http"
+    interval = "15s"
+    timeout = "2s"
+    grace_period = "30s"
+    method = "get"
+    path = "/health"
+    protocol = "http"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 512
+
+# Nếu bạn thực sự cần mount volume
+[mounts]
+  source = "dashboard_data"
+  destination = "/app/plugins"
